@@ -1,66 +1,762 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0f19">
-<meta name="description" content="A home calisthenics workout planner, calendar and exercise library.">
-<title>Home Calisthenics Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Home Calisthenics Tracker</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="bg-glow glow-1"></div><div class="bg-glow glow-2"></div>
-<aside class="sidebar">
-  <div class="side-brand"><div class="brand-mark">⚡</div><div><b>CALISTHENICS</b><small>HOME TRAINING</small></div></div>
-  <nav>
-    <button class="side-link active" data-section="library"><span>▦</span><div><b>Exercise Library</b><small id="libraryNavCount">100 movements</small></div></button>
-    <button class="side-link" data-section="calendar"><span>□</span><div><b>Workout Calendar</b><small>Plan & track days</small></div></button>
-    <button class="side-link" data-section="today"><span>✓</span><div><b>Workout of the Day</b><small id="sideDate">Today</small></div></button>
-    <button class="side-link" data-section="planner"><span>＋</span><div><b>Workout Planner</b><small>Build a custom session</small></div></button>
-  </nav>
-  <div class="side-bottom">
-    <div class="mini-stat"><span>STREAK</span><strong id="sideStreak">0</strong><small>days</small></div>
-    <button id="sideToday" class="side-today">GO TO TODAY</button>
-    <div class="data-actions">
-      <button id="exportData">EXPORT</button><button id="importData">IMPORT</button><button id="resetAll">RESET</button>
-      <input id="importFile" type="file" accept="application/json" hidden>
+
+  <!-- MOBILE HEADER -->
+  <header class="mobile-header">
+    <button id="menuButton" class="icon-button">
+      ☰
+    </button>
+
+    <div>
+      <strong>HOME CALISTHENICS</strong>
+      <span>Workout Tracker</span>
     </div>
-  </div>
-</aside>
-<main class="main">
-<header class="mobile-head"><button id="menuBtn">☰</button><b>CALISTHENICS</b><button id="mobileToday">Today</button></header>
+  </header>
 
-<section id="library" class="section active">
-  <div class="hero"><div><p class="eyebrow">MOVEMENT DATABASE</p><h1>Exercise library</h1><p class="sub">100 equipment-free calisthenics movements, organized by level and training focus.</p></div><div class="hero-count"><strong id="exerciseCount">100</strong><span>MOVEMENTS</span></div></div>
-  <div class="controls"><div class="search-wrap"><input id="search" placeholder="Search exercises..." autocomplete="off"><button id="clearSearch">×</button></div><select id="category"><option value="all">All categories</option><option>Push</option><option>Legs</option><option>Core</option><option>Full Body</option><option>Mobility</option></select><button id="favoritesFilter" class="filter-btn">☆ Favorites</button></div>
-  <div class="levels" id="levels"><button class="active" data-level="all">All</button><button data-level="beginner">Beginner</button><button data-level="intermediate">Intermediate</button><button data-level="pro">Pro</button></div>
-  <div class="filter-summary" id="summary"></div><div class="library-grid" id="libraryGrid"></div><div class="empty hidden" id="empty">No exercises found. Try another search or filter.</div>
-</section>
 
-<section id="calendar" class="section">
-  <div class="section-head"><div><p class="eyebrow">CONSISTENCY</p><h1>Workout calendar</h1><p class="sub">Select any day to see its workout. Completed sessions stay saved in this browser.</p></div></div>
-  <div class="stats-grid"><div class="stat-card"><span>THIS WEEK</span><strong id="weekProgress">0%</strong><small>days completed</small></div><div class="stat-card"><span>TOTAL WORKOUTS</span><strong id="totalWorkouts">0</strong><small>completed days</small></div><div class="stat-card"><span>EXERCISES</span><strong id="exerciseProgress">0</strong><small>checked this week</small></div></div>
-  <div class="calendar-panel"><div class="calendar-title"><div><p class="eyebrow">MONTH VIEW</p><h2 id="monthTitle"></h2></div><div class="cal-controls"><button id="prevMonth">←</button><button id="todayCal">Today</button><button id="nextMonth">→</button></div></div><div class="calendar" id="calendar"></div><div class="legend"><span><i class="dot today-dot"></i> Today</span><span><i class="dot complete-dot"></i> Completed</span><span><i class="dot workout-dot"></i> Workout day</span></div></div>
-</section>
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
 
-<section id="today" class="section">
-  <div class="section-head"><div><p class="eyebrow">DAILY SESSION</p><h1 id="workoutTitle">Workout of the Day</h1><p id="workoutSubtitle" class="sub"></p></div><div id="dayBadge" class="day-badge">—</div></div>
-  <div class="selected-note"><span>SELECTED DATE</span><strong id="selectedDateLabel"></strong><button id="changeDay">Choose from calendar</button></div>
-  <div id="completionBanner" class="completion-banner hidden"><span>✓</span><div><strong>Workout completed!</strong><small>This day is saved in your history.</small></div></div>
-  <div id="exerciseList" class="workout-list"></div>
-  <div class="session-footer"><div class="progress-wrap"><div class="progress-label"><span>Session progress</span><strong id="sessionProgress">0 / 0</strong></div><div class="progress-track"><div id="sessionBar"></div></div></div><button id="resetDay" class="danger-btn">Reset day</button></div>
-</section>
+    <div class="brand">
+      <div class="brand-icon">H</div>
 
-<section id="planner" class="section">
-  <div class="section-head"><div><p class="eyebrow">CUSTOM SESSION</p><h1>Workout planner</h1><p class="sub">Build a workout from the library and save it to a date.</p></div></div>
-  <div class="planner-grid"><div class="panel"><h2>Build workout</h2><label>Workout name<input id="planName" placeholder="e.g. Full Body A" maxlength="60"></label><label>Date<input id="planDate" type="date"></label><label>Notes<textarea id="planNotes" rows="3" placeholder="Optional notes..." maxlength="300"></textarea></label><h3>Selected exercises <span id="draftCount">0</span></h3><div id="draftList" class="draft-list"></div><button id="savePlan" class="primary">SAVE TO CALENDAR</button></div><div class="panel"><h2>Add from library</h2><input id="quickSearch" placeholder="Search exercises..."><div id="quickList" class="quick-list"></div></div></div>
-  <div class="panel saved"><div class="panel-head"><h2>Custom workouts</h2><span id="savedCount">0</span></div><div id="savedList" class="saved-list"></div></div>
-</section>
-</main>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="script.js"></script>
+      <div>
+        <h1>HOME</h1>
+        <h1>CALISTHENICS</h1>
+        <span>WORKOUT TRACKER</span>
+      </div>
+    </div>
+
+
+    <nav class="navigation">
+
+      <button
+        class="nav-item active"
+        data-section="library"
+      >
+        <span>▦</span>
+
+        <div>
+          <strong>Exercise Library</strong>
+          <small>100+ movements</small>
+        </div>
+      </button>
+
+
+      <button
+        class="nav-item"
+        data-section="calendar"
+      >
+        <span>▣</span>
+
+        <div>
+          <strong>Workout Calendar</strong>
+          <small>Track your consistency</small>
+        </div>
+      </button>
+
+
+      <button
+        class="nav-item"
+        data-section="today"
+      >
+        <span>◉</span>
+
+        <div>
+          <strong>Workout of the Day</strong>
+          <small>Today's session</small>
+        </div>
+      </button>
+
+
+      <button
+        class="nav-item"
+        data-section="planner"
+      >
+        <span>＋</span>
+
+        <div>
+          <strong>Workout Planner</strong>
+          <small>Create custom sessions</small>
+        </div>
+      </button>
+
+    </nav>
+
+
+    <!-- SIDEBAR STATS -->
+    <div class="side-stats">
+
+      <span>Current streak</span>
+
+      <strong>
+        <span id="sideStreak">0</span> days
+      </strong>
+
+      <small id="sideDate">
+        Today
+      </small>
+
+    </div>
+
+
+    <button
+      id="goToday"
+      class="today-button"
+    >
+      GO TO TODAY
+    </button>
+
+
+    <div class="side-tools">
+
+      <button id="exportData">
+        ⇩ Export Backup
+      </button>
+
+      <button id="importData">
+        ⇧ Import Backup
+      </button>
+
+      <button id="resetAll" class="danger-button">
+        Reset All Data
+      </button>
+
+      <input
+        type="file"
+        id="importFile"
+        accept=".json"
+        hidden
+      >
+
+    </div>
+
+  </aside>
+
+
+  <!-- MOBILE OVERLAY -->
+  <div
+    id="sidebarOverlay"
+    class="sidebar-overlay"
+  ></div>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+
+    <!-- ================= LIBRARY ================= -->
+
+    <section
+      id="library"
+      class="section active"
+    >
+
+      <div class="page-heading">
+
+        <div>
+          <span class="eyebrow">
+            MOVEMENT DATABASE
+          </span>
+
+          <h2>
+            Exercise Library
+          </h2>
+
+          <p>
+            Explore movements and build your own workouts.
+          </p>
+        </div>
+
+        <div class="library-total">
+          <strong id="libraryCount">
+            100
+          </strong>
+
+          <span>exercises</span>
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH -->
+      <div class="search-panel">
+
+        <div class="search-box">
+
+          <span>⌕</span>
+
+          <input
+            type="search"
+            id="search"
+            placeholder="Search exercises..."
+          >
+
+          <button id="clearSearch">
+            Clear
+          </button>
+
+        </div>
+
+
+        <select id="category">
+
+          <option value="all">
+            All categories
+          </option>
+
+          <option value="Push">
+            Push
+          </option>
+
+          <option value="Pull">
+            Pull
+          </option>
+
+          <option value="Legs">
+            Legs
+          </option>
+
+          <option value="Core">
+            Core
+          </option>
+
+          <option value="Mobility">
+            Mobility
+          </option>
+
+          <option value="Full Body">
+            Full Body
+          </option>
+
+        </select>
+
+
+        <button
+          id="favoritesFilter"
+          class="filter-button"
+        >
+          ★ Favorites
+        </button>
+
+      </div>
+
+
+      <!-- LEVEL FILTERS -->
+      <div id="levels" class="level-tabs">
+
+        <button
+          class="active"
+          data-level="all"
+        >
+          All
+        </button>
+
+        <button data-level="beginner">
+          Beginner
+        </button>
+
+        <button data-level="intermediate">
+          Intermediate
+        </button>
+
+        <button data-level="pro">
+          Pro
+        </button>
+
+      </div>
+
+
+      <div
+        id="libraryGrid"
+        class="library-grid"
+      ></div>
+
+
+      <div
+        id="empty"
+        class="empty hidden"
+      >
+        <strong>No exercises found.</strong>
+        <span>
+          Try changing your search or filters.
+        </span>
+      </div>
+
+    </section>
+
+
+    <!-- ================= CALENDAR ================= -->
+
+    <section
+      id="calendar"
+      class="section"
+    >
+
+      <div class="page-heading">
+
+        <div>
+          <span class="eyebrow">
+            CONSISTENCY
+          </span>
+
+          <h2>
+            Workout Calendar
+          </h2>
+
+          <p>
+            See your training history and progress.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- STATS -->
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <span>THIS WEEK</span>
+
+          <strong id="weekProgress">
+            0%
+          </strong>
+
+          <small>
+            Weekly progress
+          </small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>COMPLETED</span>
+
+          <strong id="totalWorkouts">
+            0
+          </strong>
+
+          <small>
+            Total workouts
+          </small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>EXERCISES</span>
+
+          <strong id="exerciseProgress">
+            0
+          </strong>
+
+          <small>
+            Completed this week
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- CALENDAR HEADER -->
+      <div class="calendar-panel">
+
+        <div class="calendar-toolbar">
+
+          <button
+            id="prevMonth"
+            class="calendar-control"
+          >
+            ‹
+          </button>
+
+          <h3 id="monthTitle">
+            Month
+          </h3>
+
+          <button
+            id="nextMonth"
+            class="calendar-control"
+          >
+            ›
+          </button>
+
+          <button
+            id="todayCal"
+            class="today-small"
+          >
+            Today
+          </button>
+
+        </div>
+
+
+        <div
+          id="calendar"
+          class="calendar-grid"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TODAY ================= -->
+
+    <section
+      id="today"
+      class="section"
+    >
+
+      <div class="page-heading">
+
+        <div>
+
+          <span
+            id="dayBadge"
+            class="eyebrow"
+          >
+            TODAY
+          </span>
+
+          <h2 id="workoutTitle">
+            Workout of the Day
+          </h2>
+
+          <p id="selectedDateLabel">
+            Today
+          </p>
+
+        </div>
+
+
+        <button
+          id="changeDay"
+          class="secondary-button"
+        >
+          Change Day
+        </button>
+
+      </div>
+
+
+      <div
+        id="completionBanner"
+        class="completion-banner hidden"
+      >
+        <strong>
+          ✓ Workout complete!
+        </strong>
+
+        <span>
+          Great job. Keep the streak going.
+        </span>
+      </div>
+
+
+      <!-- SESSION HEADER -->
+      <div class="session-card">
+
+        <div class="session-heading">
+
+          <div>
+
+            <span class="eyebrow">
+              TODAY'S SESSION
+            </span>
+
+            <h3 id="workoutSubtitle">
+              Training session
+            </h3>
+
+          </div>
+
+
+          <div class="session-number">
+            <strong id="sessionProgress">
+              0 / 0
+            </strong>
+
+            <span>
+              complete
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="progress-track">
+          <div
+            id="sessionBar"
+            class="progress-bar"
+          ></div>
+        </div>
+
+
+        <div
+          id="exerciseList"
+          class="workout-list"
+        ></div>
+
+
+        <div class="session-footer">
+
+          <button
+            id="resetDay"
+            class="secondary-button"
+          >
+            Reset Day
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= PLANNER ================= -->
+
+    <section
+      id="planner"
+      class="section"
+    >
+
+      <div class="page-heading">
+
+        <div>
+
+          <span class="eyebrow">
+            BUILD YOUR OWN
+          </span>
+
+          <h2>
+            Workout Planner
+          </h2>
+
+          <p>
+            Create custom sessions and put them directly on your calendar.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="planner-layout">
+
+
+        <!-- LEFT -->
+        <div class="planner-main">
+
+          <div class="planner-card">
+
+            <div class="planner-card-heading">
+
+              <div>
+                <span class="eyebrow">
+                  NEW WORKOUT
+                </span>
+
+                <h3>
+                  Workout Details
+                </h3>
+              </div>
+
+            </div>
+
+
+            <label>
+              Workout name
+
+              <input
+                type="text"
+                id="planName"
+                placeholder="e.g. Push Day"
+              >
+            </label>
+
+
+            <label>
+              Date
+
+              <input
+                type="date"
+                id="planDate"
+              >
+            </label>
+
+
+            <label>
+              Notes
+
+              <textarea
+                id="planNotes"
+                rows="4"
+                placeholder="Optional notes..."
+              ></textarea>
+
+            </label>
+
+
+            <div class="draft-heading">
+
+              <div>
+                <strong>
+                  Selected exercises
+                </strong>
+
+                <span id="draftCount">
+                  0
+                </span>
+              </div>
+
+            </div>
+
+
+            <div
+              id="draftList"
+              class="draft-list"
+            ></div>
+
+
+            <button
+              id="savePlan"
+              class="primary-button"
+            >
+              Save Workout
+            </button>
+
+          </div>
+
+
+          <!-- SAVED PLANS -->
+
+          <div class="planner-card">
+
+            <div class="planner-card-heading">
+
+              <div>
+
+                <span class="eyebrow">
+                  YOUR WORKOUTS
+                </span>
+
+                <h3>
+                  Saved Custom Workouts
+                </h3>
+
+              </div>
+
+              <strong id="savedCount">
+                0
+              </strong>
+
+            </div>
+
+
+            <div
+              id="savedList"
+              class="saved-list"
+            ></div>
+
+          </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+        <div class="planner-side">
+
+          <div class="planner-card">
+
+            <div class="planner-card-heading">
+
+              <div>
+
+                <span class="eyebrow">
+                  QUICK ADD
+                </span>
+
+                <h3>
+                  Exercise Search
+                </h3>
+
+              </div>
+
+            </div>
+
+
+            <div class="quick-search">
+
+              <input
+                type="search"
+                id="quickSearch"
+                placeholder="Find an exercise..."
+              >
+
+            </div>
+
+
+            <div
+              id="quickList"
+              class="quick-list"
+            ></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- TOAST -->
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <!-- JAVASCRIPT -->
+  <script src="script.js"></script>
+
 </body>
-</html>
+  </html>
